@@ -1,24 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const EmploymentHistory = () => {
-  const [education, setEducation] = useState([
-    {
-      jobTitle: "",
-      employer: "",
-      startDate: "",
-      endDate: "",
-      summary: "",
-    },
-  ]);
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // do something with the form data
-  };
-
+const EmploymentHistory = ({
+  employmentData,
+  onAddEntry,
+  onRemoveEntry,
+  onDataChange,
+}) => {
   return (
-    <div className="flex bg-slate-800 justify-center items-center h-screen">
-      <form onSubmit={handleSubmit}>
-        {education.map((edu, index) => (
+    <div className="flex bg-slate-800 justify-center items-center">
+      <form>
+        {employmentData.map((edu, index) => (
           <div key={index}>
             <div className="mb-4">
               <label
@@ -28,11 +19,11 @@ const EmploymentHistory = () => {
                 jobTitle
               </label>
               <input
-                className="w-full border border-gray-400 p-2 rounded-md"
+                className="w-[632px] border border-gray-400 p-2 rounded-md"
                 type="text"
                 value={edu.jobTitle}
                 onChange={(e) =>
-                  setEducation((prevState) => [
+                  onDataChange((prevState) => [
                     ...prevState.slice(0, index),
                     { ...edu, jobTitle: e.target.value },
                     ...prevState.slice(index + 1),
@@ -48,11 +39,11 @@ const EmploymentHistory = () => {
                 employer
               </label>
               <input
-                className="w-full border border-gray-400 p-2 rounded-md"
+                className="w-[632px] border border-gray-400 p-2 rounded-md"
                 type="text"
                 value={edu.employer}
                 onChange={(e) =>
-                  setEducation((prevState) => [
+                  onDataChange((prevState) => [
                     ...prevState.slice(0, index),
                     { ...edu, employer: e.target.value },
                     ...prevState.slice(index + 1),
@@ -68,11 +59,11 @@ const EmploymentHistory = () => {
                 startDate
               </label>
               <input
-                className="w-full border border-gray-400 p-2 rounded-md"
+                className="w-[632px] border border-gray-400 p-2 rounded-md"
                 type="date"
                 value={edu.startDate}
                 onChange={(e) =>
-                  setEducation((prevState) => [
+                  onDataChange((prevState) => [
                     ...prevState.slice(0, index),
                     { ...edu, startDate: e.target.value },
                     ...prevState.slice(index + 1),
@@ -88,11 +79,11 @@ const EmploymentHistory = () => {
                 endDate
               </label>
               <input
-                className="w-full border border-gray-400 p-2 rounded-md"
+                className="w-[632px] border border-gray-400 p-2 rounded-md"
                 type="date"
                 value={edu.endDate}
                 onChange={(e) =>
-                  setEducation((prevState) => [
+                  onDataChange((prevState) => [
                     ...prevState.slice(0, index),
                     { ...edu, endDate: e.target.value },
                     ...prevState.slice(index + 1),
@@ -108,10 +99,10 @@ const EmploymentHistory = () => {
                 summary
               </label>
               <textarea
-                className=" w-96 h-40"
+                className="w-[632px] h-40"
                 value={edu.summary}
                 onChange={(e) =>
-                  setEducation((prevState) => [
+                  onDataChange((prevState) => [
                     ...prevState.slice(0, index),
                     { ...edu, summary: e.target.value },
                     ...prevState.slice(index + 1),
@@ -119,8 +110,27 @@ const EmploymentHistory = () => {
                 }
               />
             </div>
+            <div className="mb-4">
+              <button
+                type="button"
+                className="bg-red-500 text-white px-2 py-2 rounded-md"
+                onClick={() => onRemoveEntry(index)}
+              >
+                Remove Entry
+              </button>
+              
+            </div>
           </div>
         ))}
+        <div className="mb-4">
+          <button
+            type="button"
+            className="bg-blue-500 text-white px-2 py-2 rounded-md "
+            onClick={onAddEntry}
+          >
+            Add Entry
+          </button>
+        </div>
       </form>
     </div>
   );

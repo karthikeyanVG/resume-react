@@ -1,30 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const PersonalDetails = () => {
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [profilePhoto, setProfilePhoto] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [jobTitle, setJobTitle] = useState();
-  const [address, setAddress] = useState({
-    street: "",
-    city: "",
-    state: "",
-    pinCode: "",
+const PersonalDetails = (props) => {
+  const [personalDetails, setPersonalDetails] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    profilePhoto: "",
+    dateOfBirth: "",
+    jobTitle: "",
+    address: {
+      street: "",
+      city: "",
+      state: "",
+      pinCode: "",
+    },
   });
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    // Send updated values to the parent component whenever there's a change
+    props.onSubmitValues(personalDetails);
+  }, [personalDetails, props]);
+
+  const onSubmit = (e) => {
     e.preventDefault();
-    // do something with the form data
-    console.log(name);
+    // Additional logic on form submission if needed
   };
+
+  const handleInputChange = (e, field, subField) => {
+    if (subField) {
+      setPersonalDetails({
+        ...personalDetails,
+        [field]: {
+          ...personalDetails[field],
+          [subField]: e.target.value,
+        },
+      });
+    } else {
+      setPersonalDetails({
+        ...personalDetails,
+        [field]: e.target.value,
+      });
+    }
+  };
+
   return (
-    <div className="flex bg-slate-800 justify-center items-center h-screen">
-      <form
-        className="flex gap-20"
-        onSubmit={handleSubmit}
-      >
+    <div className="flex bg-slate-800 justify-center items-center">
+      <form className="flex gap-20" onSubmit={onSubmit}>
         <div>
           <div className="mb-4">
             <label
@@ -37,8 +58,8 @@ const PersonalDetails = () => {
               className="w-full border border-gray-400 p-2 rounded-md"
               type="text"
               id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={personalDetails.name}
+              onChange={(e) => handleInputChange(e, "name")}
             />
           </div>
           <div className="mb-4">
@@ -46,14 +67,14 @@ const PersonalDetails = () => {
               className="block mb-2 font-bold text-gray-300"
               htmlFor="jobTitle"
             >
-              jobTitle
+              Job Title
             </label>
             <input
               className="w-full border border-gray-400 p-2 rounded-md"
               type="text"
               id="jobTitle"
-              value={jobTitle}
-              onChange={(e) => setJobTitle(e.target.value)}
+              value={personalDetails.jobTitle}
+              onChange={(e) => handleInputChange(e, "jobTitle")}
             />
           </div>
           <div className="mb-4">
@@ -67,8 +88,8 @@ const PersonalDetails = () => {
               className="w-full border border-gray-400 p-2 rounded-md"
               type="tel"
               id="phone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              value={personalDetails.phone}
+              onChange={(e) => handleInputChange(e, "phone")}
             />
           </div>
           <div className="mb-4">
@@ -82,8 +103,8 @@ const PersonalDetails = () => {
               className="w-full border border-gray-400 p-2 rounded-md"
               type="email"
               id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={personalDetails.email}
+              onChange={(e) => handleInputChange(e, "email")}
             />
           </div>
           <div className="mb-4">
@@ -91,13 +112,14 @@ const PersonalDetails = () => {
               className="block mb-2 font-bold text-gray-300"
               htmlFor="dateOfBirth"
             >
-              dateOfBirth
+              Date of Birth
             </label>
             <input
               className="w-full border border-gray-400 p-2 rounded-md"
               type="date"
-              value={dateOfBirth}
-              onChange={(e) => setDateOfBirth(e.target.value)}
+              id="dateOfBirth"
+              value={personalDetails.dateOfBirth}
+              onChange={(e) => handleInputChange(e, "dateOfBirth")}
             />
           </div>
         </div>
@@ -107,15 +129,15 @@ const PersonalDetails = () => {
               className="block mb-2 font-bold text-gray-300"
               htmlFor="profilePhoto"
             >
-              profilePhoto
+              Profile Photo
             </label>
             <input
               className=" w-72 border border-gray-400 p-2 rounded-md"
               type="file"
               id="profilePhoto"
-              accept="image/png, image/gif, image/jpeg" 
-              value={profilePhoto}
-              onChange={(e) => setProfilePhoto(e.target.value)}
+              accept="image/png, image/gif, image/jpeg"
+              value={personalDetails.profilePhoto}
+              onChange={(e) => handleInputChange(e, "profilePhoto")}
             />
           </div>
           <div className="mb-4">
@@ -123,14 +145,14 @@ const PersonalDetails = () => {
               className="block mb-2 font-bold text-gray-300"
               htmlFor="state"
             >
-              state
+              State
             </label>
             <input
               className="w-full border border-gray-400 p-2 rounded-md"
-              type="state"
+              type="text"
               id="state"
-              value={address.state}
-              onChange={(e) => setAddress({ state: e.target.value })}
+              value={personalDetails.address.state}
+              onChange={(e) => handleInputChange(e, "address", "state")}
             />
           </div>
           <div className="mb-4">
@@ -138,14 +160,14 @@ const PersonalDetails = () => {
               className="block mb-2 font-bold text-gray-300"
               htmlFor="city"
             >
-              city
+              City
             </label>
             <input
               className="w-full border border-gray-400 p-2 rounded-md"
-              type="city"
+              type="text"
               id="city"
-              value={address.city}
-              onChange={(e) => setAddress({ city: e.target.value })}
+              value={personalDetails.address.city}
+              onChange={(e) => handleInputChange(e, "address", "city")}
             />
           </div>
           <div className="mb-4">
@@ -153,29 +175,29 @@ const PersonalDetails = () => {
               className="block mb-2 font-bold text-gray-300"
               htmlFor="street"
             >
-              street
+              Street
             </label>
             <input
               className="w-full border border-gray-400 p-2 rounded-md"
-              type="street"
+              type="text"
               id="street"
-              value={address.street}
-              onChange={(e) => setAddress({ street: e.target.value })}
+              value={personalDetails.address.street}
+              onChange={(e) => handleInputChange(e, "address", "street")}
             />
           </div>
           <div className="mb-4">
             <label
               className="block mb-2 font-bold text-gray-300"
-              htmlFor="pincode"
+              htmlFor="pinCode"
             >
-              pincode
+              Pin Code
             </label>
             <input
               className="w-full border border-gray-400 p-2 rounded-md"
-              type="pincode"
-              id="pincode"
-              value={address.pinCode}
-              onChange={(e) => setAddress({ pinCode: e.target.value })}
+              type="text"
+              id="pinCode"
+              value={personalDetails.address.pinCode}
+              onChange={(e) => handleInputChange(e, "address", "pinCode")}
             />
           </div>
         </div>

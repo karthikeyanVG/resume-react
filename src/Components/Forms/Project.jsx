@@ -1,74 +1,79 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 
-const Project = () => {
-  const [projects, setProjects] = useState([
-    {
-      name: "",
-      description: "",
-    },
-  ]);
+const Project = ({ projects, onUpdateProjects }) => {
+  const [localProjects, setLocalProjects] = useState(projects);
+
   const handleAddProject = () => {
-    setProjects([...projects, { name: "", description: "" }]);
+    setLocalProjects([...localProjects, { name: "", description: "" }]);
   };
 
   const handleRemoveProject = (index) => {
-    const temp = [...projects];
+    const temp = [...localProjects];
     temp.splice(index, 1);
-    setProjects(temp);
+    setLocalProjects(temp);
   };
 
   const handleProjectChange = (e, index, key) => {
-    const temp = [...projects];
+    const temp = [...localProjects];
     temp[index][key] = e.target.value;
-    setProjects(temp);
+    setLocalProjects(temp);
   };
 
+  // Update parent component when localProjects change
+  useEffect(() => {
+    onUpdateProjects(localProjects);
+  }, [localProjects, onUpdateProjects]);
+
   return (
-    <div>
+    <div className="p-4">
       <form>
         {projects.map((pro, index) => (
-          <div key={index}>
-            <div className="mb-4">
+          <div key={index} className="mb-4 flex items-center">
+            <div className="flex-grow mr-2">
               <label
-                className="block mb-2 font-bold text-gray-700"
-                htmlFor="projectName"
+                className="block mb-2 font-bold text-gray-300"
+                htmlFor={`name-${index}`}
               >
                 Project Name
               </label>
               <input
                 className="w-full border border-gray-400 p-2 rounded-md"
                 type="text"
-                id="projectName"
+                id={`name-${index}`}
                 value={pro.name}
-                onChange={(e) =>
-                  setProjects((prevState) => [
-                    ...prevState.slice(0, index),
-                    { ...pro, name: e.target.value },
-                    ...prevState.slice(index + 1),
-                  ])
-                }
+                onChange={(e) =>  handleProjectChange(e, index, "name")}
               />
             </div>
-            <div className="mb-4">
+            <div className="flex-grow mr-2">
               <label
-                className="block mb-2 font-bold text-gray-700"
-                htmlFor="description"
+                className="block mb-2 font-bold text-gray-300"
+                htmlFor={`description-${index}`}
               >
                 Description
               </label>
               <input
                 className="w-full border border-gray-400 p-2 rounded-md"
                 type="text"
-                id="description"
+                id={`description-${index}`}
                 value={pro.description}
-                onChange={(e) =>
-                  setProjects((prevState) => [
-                    ...prevState.slice(0, index),
-                    { ...pro, description: e.target.value },
-                    ...prevState.slice(index + 1),
-                  ])
-                }
+                onChange={(e) => handleProjectChange(e, index, "description")}
               />
+            </div>
+            <div className="flex gap-2 mt-8" >
+             {localProjects.length > 1 && <button
+                type="button"
+                onClick={() => handleRemoveProject(index)}
+                className="bg-red-500 text-white px-2 py-2 rounded-md"
+              >
+                Remove
+              </button>}
+             {localProjects.length === index +1 && <button
+                type="button"
+                onClick={handleAddProject}
+                className="bg-blue-500 text-white px-2 py-2 rounded-md "
+              >
+                Add 
+              </button>}
             </div>
           </div>
         ))}

@@ -13,22 +13,27 @@ import Project from './Components/Forms/Project';
 function App() {
 
   return (
-    <>
-      {/* <PDFViewer className='h-[38rem] w-[40rem]'>
-        <TemplateOne />
-      </PDFViewer>
-      <PDFDownloadLink document={<TemplateOne />} fileName="somename.pdf">
-        {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download now!')}
-      </PDFDownloadLink> */}
+    <div className='flex max-h-fit' >
+
+
       {/* <SignUp></SignUp> */}
       {/* <Login></Login> */}
-      <ResumeForm/>
       {/* <PersonalDetails/> */}
       {/* <ProfessionalSummary/> */}
       {/* <EmploymentHistory/> */}
       {/* <SocialLinks/> */}
       {/* <Project/> */}
-    </>
+      <ResumeForm />
+      <div>
+        <PDFViewer height={'00px'} className='h-[100vh] w-[40rem]'>
+          <TemplateOne />
+        </PDFViewer>
+        {/* <PDFDownloadLink document={<TemplateOne />} fileName="somename.pdf">
+          {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download now!')}
+        </PDFDownloadLink> */}
+      </div>
+      {/* <TemplateOne /> */}
+    </div>
   );
 }
 

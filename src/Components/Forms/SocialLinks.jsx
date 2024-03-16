@@ -1,77 +1,82 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 
-const SocialLinks = () => {
-  const [socialLinks, setSocialLinks] = useState([
-    {
-      platform: "",
-      url: "",
-    },
-  ]);
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // do something with the form data
-  };
-  const handleAddSocialLink = () => {
-    setSocialLinks([...socialLinks, { platform: "", url: "" }]);
+const SocialLinks = ({platformData,onUpdatePlatForm}) => {
+  const [platform, setPlatform] = useState(platformData);
+
+  const handleAddProject = () => {
+    setPlatform([...platform, { name: "", description: "" }]);
   };
 
-  const handleRemoveSocialLink = (index) => {
-    const temp = [...socialLinks];
+  const handleRemoveProject = (index) => {
+    const temp = [...platform];
     temp.splice(index, 1);
-    setSocialLinks(temp);
+    setPlatform(temp);
   };
 
-  const handleSocialLinkChange = (e, index, key) => {
-    const temp = [...socialLinks];
+  const handleProjectChange = (e, index, key) => {
+    const temp = [...platform];
     temp[index][key] = e.target.value;
-    setSocialLinks(temp);
+    setPlatform(temp);
   };
+
+  useEffect(() => {
+    onUpdatePlatForm(platform);
+  }, [platform, onUpdatePlatForm]);
+
   return (
-    <div className="flex bg-slate-800 justify-center items-center h-screen">
-      <form onSubmit={handleSubmit}> 
-        {socialLinks.map((social, index) => (
-          <div className="flex gap-14" key={index}>
-            <div className="mb-4">
+    <div className="p-4">
+      <form>
+        {platformData.map((pro, index) => (
+          <div key={index} className="mb-4 flex items-center">
+            <div className="flex-grow mr-2">
               <label
                 className="block mb-2 font-bold text-gray-300"
-                htmlFor="platform"
+                htmlFor={`platform-${index}`}
               >
-               Platform
+                Platform
               </label>
               <input
                 className="w-full border border-gray-400 p-2 rounded-md"
                 type="text"
-                id="platform"
-                value={social.platform}
-                onChange={(e) =>
-                  setSocialLinks((prevState) => [
-                    ...prevState.slice(0, index),
-                    { ...social, platform: e.target.value },
-                    ...prevState.slice(index + 1),
-                  ])
-                }
+                id={`platform-${index}`}
+                value={pro.platform}
+                onChange={(e) => handleProjectChange(e, index, "platform")}
               />
             </div>
-            <div className="mb-4">
+            <div className="flex-grow mr-2">
               <label
                 className="block mb-2 font-bold text-gray-300"
-                htmlFor="url"
+                htmlFor={`url-${index}`}
               >
                 Url
               </label>
               <input
                 className="w-full border border-gray-400 p-2 rounded-md"
                 type="text"
-                id="url"
-                value={social.url}
-                onChange={(e) =>
-                  setSocialLinks((prevState) => [
-                    ...prevState.slice(0, index),
-                    { ...social, url: e.target.value },
-                    ...prevState.slice(index + 1),
-                  ])
-                }
+                id={`Url-${index}`}
+                value={pro.Url}
+                onChange={(e) => handleProjectChange(e, index, "url")}
               />
+            </div>
+            <div className="flex gap-2 mt-8">
+              {platformData.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => handleRemoveProject(index)}
+                  className="bg-red-500 text-white px-2 py-2 rounded-md"
+                >
+                  Remove
+                </button>
+              )}
+              {platformData.length === index + 1 && (
+                <button
+                  type="button"
+                  onClick={handleAddProject}
+                  className="bg-blue-500 text-white px-2 py-2 rounded-md "
+                >
+                  Add
+                </button>
+              )}
             </div>
           </div>
         ))}
@@ -79,5 +84,4 @@ const SocialLinks = () => {
     </div>
   );
 };
-
 export default SocialLinks;
